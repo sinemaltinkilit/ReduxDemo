@@ -32,6 +32,7 @@ class App extends React.Component {
    }
 
    componentDidMount() {
+    //AsyncStorage.setItem('lastCard',"");
     DeviceEventEmitter.addListener('onTagError', function (e) {
         console.log('error', e)
         Alert.alert(JSON.stringify(e))
@@ -52,7 +53,8 @@ class App extends React.Component {
     })
   }
 
-  getLastQueries() {   
+  getLastQueries() { 
+        items = [];  
         AsyncStorage.getItem('lastCard').then((lastC) => {
             console.log('last c: '+lastC);
             if (lastC != null) {
@@ -64,20 +66,16 @@ class App extends React.Component {
                 }              
                 console.log('items: '+items.length);
                 console.log('items: '+JSON.stringify(items));
+                //var filtedArr = Array.from(new Set(items));
+                //console.log('async lastCard ', filtedArr);
             
-                //listStore.list.push(items);
-                //console.log('list store list: '+ite);
-                //listStore.dataSource = this.ds.cloneWithRows(listStore.list);
-                //console.log('list store datasource: '+JSON.stringify(listStore.dataSource._dataBlob.s1));
-                /*
-                this.setState({
-                    dataSource: this.ds.cloneWithRows(items),
-                });
-                */
-                //console.log('list store datasource: '+JSON.stringify(this.state.dataSource));
-                
-                //this.setState({lastqueries: true, lastcardno: lastC});
-                
+                items.map((person, index) => (
+                  <View key={index} style={styles.person}>
+                    
+                    <Text>cardNo: {person.cardNo}</Text>
+                    <Text onPress={() => this.deletePerson(person)}>Delete Person</Text>
+                  </View>
+                ))
             }else{
                 console.log('last card lastC storage null');
             }
@@ -106,15 +104,15 @@ class App extends React.Component {
     */
     this.setState({ inputValue: '' });
     let arr = this.props.people;
-    console.log('arr: ', items.length);
+    console.log('arr length: ', items.length);
 
     let storingValue = JSON.stringify(this.props.people);
     console.log('storingValue ', this.props.people);
   //  for(var i=0;i<items.length;i++){
-      this.props.dispatchAddPerson({
+    //  this.props.dispatchAddPerson({
         //cardNo: storingValue
-        items
-      });       
+    //    items
+    //  });       
   //  }
 
   //  console.log('storingValue json stringify  ', items);
@@ -126,15 +124,29 @@ class App extends React.Component {
         */
   //  console.log('storingValue json stringify 2**  ', items);
     AsyncStorage.setItem('lastCard',JSON.stringify(items));
-    console.log('async lastCard ', this.props.people);
-    console.log(' lastCard no ', items[0].cardNo);
+    //var filtedArr = Array.from(new Set(items));
+    //console.log('async lastCard ', filtedArr);
+    //console.log(' lastCard no ', items[0].cardNo);
+
+
+
+    //this.setState({ inputValue:  inputValue});
+
   }
   deletePerson = (person) => {
     this.props.dispatchdeletePerson(person);
+    console.log('person ',person);
+    var index = items.indexOf(person);
+    console.log(index);
+    items.splice(index,1);
+    console.log('items index ', items);
+    AsyncStorage.setItem('lastCard',JSON.stringify(items));
   }
+
   updateInput = (inputValue) => {
     this.setState({ inputValue })
   }
+
   render() {
     return (
       <View style={styles.container}>
@@ -153,12 +165,10 @@ class App extends React.Component {
           <Text style={styles.buttonText}>Add Person</Text>
         </TouchableHighlight>
         {
-          this.props.people.map((person, index) => (
+          items.map((person, index) => (
             <View key={index} style={styles.person}>
-              <Text>Name: {person.name}</Text>
-              <Text>SurName: {person.surname}</Text>
-              <Text>Age: {person.age}</Text>
-              <Text>cardNo: {items[0].cardNo}</Text>
+              
+              <Text>cardNo: {person.cardNo}</Text>
               <Text onPress={() => this.deletePerson(person)}>Delete Person</Text>
             </View>
           ))
