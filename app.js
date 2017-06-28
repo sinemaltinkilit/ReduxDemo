@@ -31,7 +31,7 @@ class App extends React.Component {
      this.getLastQueries();
    }
 
-  componentDidMount() {
+   componentDidMount() {
     DeviceEventEmitter.addListener('onTagError', function (e) {
         console.log('error', e)
         Alert.alert(JSON.stringify(e))
@@ -52,8 +52,7 @@ class App extends React.Component {
     })
   }
 
-  getLastQueries() {
-        
+  getLastQueries() {   
         AsyncStorage.getItem('lastCard').then((lastC) => {
             console.log('last c: '+lastC);
             if (lastC != null) {
@@ -94,23 +93,6 @@ class App extends React.Component {
     console.log('get id: ');
   }
 
-  writeTagData() {
-    writeTag([{ sector: 1, blocks: [ 
-    { index: 1, data: [15,15,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,15,15] },
-    { index: 2, data: [15,15,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,15,15] } ],
-      clave: 'FFFFFFFFFFFF', keyType: 'A' },
-      { sector: 2, blocks: [ 
-    { index: 0, data: [15,15,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,15,15] },
-    { index: 1, data: [15,15,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,15,15] },
-    { index: 2, data: [15,15,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,15,15] } ],
-      clave: 'FFFFFFFFFFFF', keyType: 'A' },
-    { sector: 3, blocks: [ 
-    { index: 0, data: [15,15,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,15,15] } ],
-      clave: 'FFFFFFFFFFFF', keyType: 'A' },
-      ], 1148002313)
-      console.log('write Tag');
-  }
-
   addPerson = () => {
     //getTagId();
     this.readTagData();
@@ -149,7 +131,6 @@ class App extends React.Component {
   }
   deletePerson = (person) => {
     this.props.dispatchdeletePerson(person);
-    this.writeTagData();
   }
   updateInput = (inputValue) => {
     this.setState({ inputValue })
